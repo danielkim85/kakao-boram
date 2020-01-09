@@ -22,6 +22,7 @@
 				scope: 'profile,friends',
         success: function(authObj) {
           console.info(authObj);
+          alert(authObj);
         },
         fail: function(err) {
           console.error(err);
