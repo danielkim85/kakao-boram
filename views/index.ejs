@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+		<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+		<script src="https://code.angularjs.org/1.6.9/angular.js"></script>
+  </head>
+  <body ng-controller="BoramCtrl">
+    <h1>카카오 웹!</h1>
+    <p>보람씨를 위한 카카오웹!</p>
+
+		<a id="kakao-login-btn"></a>
+		<a href="http://developers.kakao.com/logout"></a>
+		<script type='text/javascript'>
+      //<![CDATA[
+      // 사용할 앱의 JavaScript 키를 설정해 주세요.
+      Kakao.init('72ec3baa9e089759a3d2618025dfc1f8');
+      // 카카오 로그인 버튼을 생성합니다.
+      Kakao.Auth.createLoginButton({
+        container: '#kakao-login-btn',
+				scope: 'profile,friends',
+        success: function(authObj) {
+          console.info(authObj);
+        },
+        fail: function(err) {
+          console.error(err);
+        }
+      });
+
+      Kakao.Auth.getStatusInfo(function(statusObj){
+        console.info(statusObj);
+			});
+      //]]>
+		</script>
+		<div>
+			<Button ng-click="logout();">
+				Logout
+			</Button>
+		</div>
+		<div>
+			<Button ng-click="friends();">
+				Friends
+			</Button>
+		</div>
+		<script src="javascripts/app.js"></script>
+  </body>
+</html>
