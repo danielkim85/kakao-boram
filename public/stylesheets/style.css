@@ -6,3 +6,60 @@ body {
 a {
   color: #00B7FF;
 }
+
+.msg-box{
+	height:300px;
+	overflow-y:scroll;
+	background-color:#9bbbd4;
+	padding-bottom:0;
+}
+
+.msg-box .uk-comment-avatar{
+	width:35px;
+	position:relative;
+	z-index:1;
+}
+
+.msg-box .uk-comment-header{
+	margin-bottom:0;
+}
+
+.msg-box .uk-comment-list>:nth-child(n+2){
+	margin-top:35px !important;
+}
+
+.msg-box .uk-width-expand{
+	padding-left:10px;
+}
+
+.msg-box .uk-comment-title{
+	color:#556677;
+	font-size:12px;
+	position:relative;
+	top:-10px;
+}
+
+.msg-box .uk-comment-body{
+	background-color:#fff;
+	position:relative;
+	top:-15px;
+	z-index:0;
+	margin-left:20px;
+	float:left;
+}
+
+.msg-box .uk-comment-body p{
+	margin:10px 25px 10px 25px;
+	font-size:12px;
+	float:left;
+}
+
+.msg-input{
+	padding-right:100px;
+}
+
+.send-button{
+	float:right;
+	margin-top:-40px;
+	position:relative;
+}

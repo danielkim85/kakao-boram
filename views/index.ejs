@@ -1,49 +1,76 @@
 <!DOCTYPE html>
 <html ng-app="app">
   <head>
-    <title><%= title %></title>
+    <title>카카오웹!</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/css/uikit.min.css" />
+
+		<!-- UIkit JS -->
+		<script src="https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit-icons.min.js"></script>
+
     <link rel='stylesheet' href='/stylesheets/style.css' />
 		<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 		<script src="https://code.angularjs.org/1.6.9/angular.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
   </head>
   <body ng-controller="BoramCtrl">
-    <h1>카카오 웹!</h1>
-    <p>보람씨를 위한 카카오웹!</p>
 
-		<a id="kakao-login-btn"></a>
-		<a href="http://developers.kakao.com/logout"></a>
-		<script type='text/javascript'>
-      //<![CDATA[
-      // 사용할 앱의 JavaScript 키를 설정해 주세요.
-      Kakao.init('72ec3baa9e089759a3d2618025dfc1f8');
-      // 카카오 로그인 버튼을 생성합니다.
-      Kakao.Auth.createLoginButton({
-        container: '#kakao-login-btn',
-				scope: 'profile,friends',
-        success: function(authObj) {
-          console.info(authObj);
-          alert(authObj);
-        },
-        fail: function(err) {
-          console.error(err);
-        }
-      });
+		<h1>보람씨를 위한 카카오웹!</h1>
 
-      Kakao.Auth.getStatusInfo(function(statusObj){
-        console.info(statusObj);
-			});
-      //]]>
-		</script>
-		<div>
-			<Button ng-click="logout();">
-				Logout
+		<div ng-show="isLoggedIn">
+			<div class="uk-card uk-card-default uk-card-body uk-width-1-2@m msg-box">
+				<ul class="uk-comment-list">
+					<li ng-repeat="chat in chats"
+							ng-class="profile.userId === chat.profile.userId ? 'me' : 'not-me'">
+						<article class="uk-comment uk-visible-toggle" tabindex="-1">
+							<header class="uk-comment-header uk-position-relative">
+								<div class="uk-grid-medium uk-flex-middle" uk-grid>
+									<div class="uk-width-auto">
+										<img class="uk-comment-avatar" src="{{chat.profile.thumbnailImage}}" width="80" height="80" alt="">
+									</div>
+									<div class="uk-width-expand">
+										<h4 class="uk-comment-title uk-margin-remove">{{chat.profile.nickname}}</h4>
+									</div>
+								</div>
+							</header>
+							<div class="uk-comment-body">
+								<p>{{chat.msg}}</p>
+							</div>
+						</article>
+					</li>
+				</ul>
+			</div>
+			<input class="uk-input msg-input"
+						 type="text"
+						 ng-model="msg"
+						 ng-keydown="$event.keyCode === 13 && send(msg)"
+						 placeholder="여기다 쓰세용">
+			<Button class="uk-button uk-button-primary send-button"
+							ng-click="send(msg);">
+				전송
 			</Button>
 		</div>
+
+		<a id="kakao-login-btn" ng-show="!isLoggedIn"></a>
+		<Button class="uk-button uk-button-primary"
+						ng-show="isLoggedIn"
+						ng-click="logout();">
+			Logout
+		</Button>
+
+		<!--
 		<div>
 			<Button ng-click="friends();">
 				Friends
 			</Button>
 		</div>
+		<div>
+			<Button ng-click="message();">
+				Send message
+			</Button>
+		</div>
+		-->
+
 		<script src="javascripts/app.js"></script>
   </body>
 </html>
