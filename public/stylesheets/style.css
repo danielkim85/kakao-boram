@@ -14,6 +14,10 @@ a {
 	padding-bottom:0;
 }
 
+.msg-box article{
+	width:100%;
+	display:inline-block;
+}
 .msg-box .uk-comment-avatar{
 	width:35px;
 	position:relative;
@@ -25,7 +29,7 @@ a {
 }
 
 .msg-box .uk-comment-list>:nth-child(n+2){
-	margin-top:35px !important;
+	margin-top:0 !important;
 }
 
 .msg-box .uk-width-expand{
@@ -52,6 +56,31 @@ a {
 	margin:10px 25px 10px 25px;
 	font-size:12px;
 	float:left;
+}
+
+.msg-box .timestamp{
+	color:#556677;
+	font-size:10px;
+	margin-left:5px;
+}
+
+.msg-box .me article{
+	margin-top:10px !important;
+	margin-bottom:-5px;
+}
+
+.msg-box .me header{
+	display:none;
+}
+
+.msg-box .me .uk-comment-body{
+	background-color:#fef01b;
+	float:right;
+	margin-left:5px;
+}
+.msg-box .me .timestamp{
+	margin-top:5px;
+	float:right;
 }
 
 .msg-input{

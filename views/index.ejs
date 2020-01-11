@@ -12,12 +12,17 @@
 		<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 		<script src="https://code.angularjs.org/1.6.9/angular.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.slim.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+		<script
+			src="https://code.jquery.com/jquery-2.2.4.min.js"
+			integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+			crossorigin="anonymous"></script>
   </head>
   <body ng-controller="BoramCtrl">
 
 		<h1>보람씨를 위한 카카오웹!</h1>
 
-		<div ng-show="isLoggedIn">
+		<div ng-show="isLoggedIn && isSocketRdy">
 			<div class="uk-card uk-card-default uk-card-body uk-width-1-2@m msg-box">
 				<ul class="uk-comment-list">
 					<li ng-repeat="chat in chats"
@@ -36,6 +41,7 @@
 							<div class="uk-comment-body">
 								<p>{{chat.msg}}</p>
 							</div>
+							<span class="timestamp">{{chat.timestamp}}</span>
 						</article>
 					</li>
 				</ul>
@@ -51,7 +57,9 @@
 			</Button>
 		</div>
 
-		<a id="kakao-login-btn" ng-show="!isLoggedIn"></a>
+		<a id="kakao-login-btn"
+			 style="display:none;"
+			 ng-show="!isLoggedIn"></a>
 		<Button class="uk-button uk-button-primary"
 						ng-show="isLoggedIn"
 						ng-click="logout();">

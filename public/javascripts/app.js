@@ -15,7 +15,7 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
     container: '#kakao-login-btn',
     scope: 'profile,friends,talk_message',
     success: function(authObj) {
-      profile.accessToken = authObj.access_token;
+      $scope.profile.accessToken = authObj.access_token;
       getStatusInfo();
     },
     fail: function(err) {
@@ -38,6 +38,7 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
         });
         $scope.$apply();
       }
+      $('#kakao-login-btn').show();
     });
   };
 
@@ -69,6 +70,9 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
   };
 
   $scope.send = function(msg) {
+    if(msg === ''){
+      return;
+    }
     socket.emit('msg',{
       profile : $scope.profile,
       msg : msg
@@ -80,12 +84,20 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
     window.location.reload();
   });
 
+  socket.on('socketRdy',function(){
+    $scope.isSocketRdy = true;
+    $scope.$apply();
+  });
+
   socket.on('msg',function(data){
     if(!data.profile.thumbnailImage){
       data.profile.thumbnailImage = DEFAULT_PROFILE_IMG;
     }
+
+    data.timestamp = moment(data.timestamp).format('h:mm a');
     $scope.chats.push(data);
     $scope.$apply();
+    $('.msg-box').scrollTop(1000000);
   });
 
   /*
