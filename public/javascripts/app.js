@@ -1,7 +1,7 @@
 angular.module("app", []).controller("BoramCtrl", function($scope) {
 
   const socket = io();
-  const DEFAULT_PROFILE_IMG = 'https://www.downeastyachting.com/wp/wp-content/uploads/downeastyachting.com/2005/09/default-profile.png';
+  $scope.DEFAULT_PROFILE_IMG = 'https://www.downeastyachting.com/wp/wp-content/uploads/downeastyachting.com/2005/09/default-profile.png';
   Kakao.init('72ec3baa9e089759a3d2618025dfc1f8');
 
   $scope.profile = {
@@ -27,7 +27,7 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
     Kakao.Auth.getStatusInfo(function(statusObj){
       $scope.isLoggedIn = statusObj.status === 'connected';
       if($scope.isLoggedIn){
-        loadTestData();
+        //loadTestData();
         loadProfile(statusObj.user);
         if(!$scope.profile.accessToken){
           $scope.profile.accessToken = Kakao.Auth.getAccessToken();
@@ -38,7 +38,7 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
         });
         $scope.$apply();
       }
-      $('#kakao-login-btn').show();
+      $('.login-btn').show();
     });
   };
 
@@ -84,22 +84,28 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
     window.location.reload();
   });
 
-  socket.on('socketRdy',function(){
+  socket.on('socketRdy',function(messages){
+    console.info(messages);
+    $scope.chats = messages;
     $scope.isSocketRdy = true;
     $scope.$apply();
+    scroll();
   });
 
   socket.on('msg',function(data){
-    if(!data.profile.thumbnailImage){
-      data.profile.thumbnailImage = DEFAULT_PROFILE_IMG;
+    if(!data.thumbnailImage){
+      data.thumbnailImage = $scope.DEFAULT_PROFILE_IMG;
     }
 
     data.timestamp = moment(data.timestamp).format('h:mm a');
     $scope.chats.push(data);
     $scope.$apply();
-    $('.msg-box').scrollTop(1000000);
+    scroll();
   });
 
+  const scroll = function(){
+    $('.msg-box').scrollTop(1000000);
+  };
   /*
   $scope.friends = function(){
     Kakao.API.request({

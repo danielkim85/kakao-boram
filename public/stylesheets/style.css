@@ -53,7 +53,7 @@ a {
 }
 
 .msg-box .uk-comment-body p{
-	margin:10px 25px 10px 25px;
+	margin:10px 10px 10px 20px;
 	font-size:12px;
 	float:left;
 }
@@ -78,6 +78,11 @@ a {
 	float:right;
 	margin-left:5px;
 }
+
+.msg-box .me .uk-comment-body p{
+	margin:10px;
+}
+
 .msg-box .me .timestamp{
 	margin-top:5px;
 	float:right;
@@ -91,4 +96,8 @@ a {
 	float:right;
 	margin-top:-40px;
 	position:relative;
+}
+
+#kakao-logout-btn{
+	margin-top:20px;
 }
