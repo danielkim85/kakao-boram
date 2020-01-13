@@ -5,4 +5,4 @@ CREATE TABLE `users` (
   `thumbnailImage` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`,`userId`),
   UNIQUE KEY `userId_UNIQUE` (`userId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

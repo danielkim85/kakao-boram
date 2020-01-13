@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html ng-app="app">
+<html ng-app="app" ng-controller="BoramCtrl">
   <head>
-    <title>카카오웹!</title>
+    <title ng-bind="title">카카오웹!</title>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/css/uikit.min.css" />
 
 		<!-- UIkit JS -->
@@ -17,72 +17,68 @@
 			src="https://code.jquery.com/jquery-2.2.4.min.js"
 			integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
 			crossorigin="anonymous"></script>
-  </head>
-  <body ng-controller="BoramCtrl">
+	</head>
+	<body>
 
-		<h1>보람씨를 위한 카카오웹!</h1>
+		<div class="flex-box header-box">
+			<h1>보람톡!</h1>
+			<img class="profile-img"
+					 src="{{profile.thumbnailImage}}" />
+		</div>
 
-		<div ng-show="isLoggedIn && isSocketRdy">
-			<div class="uk-card uk-card-default uk-card-body uk-width-1-2@m msg-box">
-				<ul class="uk-comment-list">
-					<li ng-repeat="chat in chats"
-							ng-class="profile.userId === chat.userId ? 'me' : 'not-me'">
-						<article class="uk-comment uk-visible-toggle" tabindex="-1">
-							<header class="uk-comment-header uk-position-relative">
-								<div class="uk-grid-medium uk-flex-middle" uk-grid>
-									<div class="uk-width-auto">
-										<img class="uk-comment-avatar"
-												 src="{{chat.thumbnailImage ? chat.thumbnailImage : DEFAULT_PROFILE_IMG}}"
-												 width="80" height="80" alt="">
-									</div>
-									<div class="uk-width-expand">
-										<h4 class="uk-comment-title uk-margin-remove">{{chat.nickname}}</h4>
-									</div>
+		<div ng-show="isLoggedIn && isSocketRdy"
+				 class="flex-box main-box uk-card uk-card-default uk-card-body uk-width-1-2@m msg-box">
+			<ul class="uk-comment-list">
+				<li ng-repeat="chat in chats"
+						ng-class="profile.userId === chat.userId ? 'me' : 'not-me'">
+					<article class="uk-comment uk-visible-toggle" tabindex="-1">
+						<header class="uk-comment-header uk-position-relative">
+							<div class="uk-grid-medium uk-flex-middle" uk-grid>
+								<div class="uk-width-auto">
+									<img class="uk-comment-avatar"
+											 src="{{chat.thumbnailImage ? chat.thumbnailImage : DEFAULT_PROFILE_IMG}}"
+											 width="80" height="80" alt="">
 								</div>
-							</header>
-							<div class="uk-comment-body">
-								<p>{{chat.message}}</p>
+								<div class="uk-width-expand">
+									<h4 class="uk-comment-title uk-margin-remove">{{chat.nickname}}</h4>
+								</div>
 							</div>
-							<span class="timestamp">{{chat.timestamp}}</span>
-						</article>
-					</li>
-				</ul>
-			</div>
+						</header>
+						<div class="uk-comment-body">
+							<p>{{chat.message}}</p>
+						</div>
+						<span class="timestamp">{{chat.timestamp}}</span>
+					</article>
+				</li>
+			</ul>
+		</div>
+
+		<div class="flex-box action-box"
+				 ng-show="isLoggedIn && isSocketRdy">
 			<input class="uk-input msg-input"
 						 type="text"
 						 ng-model="msg"
 						 ng-keydown="$event.keyCode === 13 && send(msg)"
-						 placeholder="여기다 쓰세용">
+						 placeholder="여기다 쓰세용" />
 			<Button class="uk-button uk-button-primary send-button"
 							ng-click="send(msg);">
 				전송
 			</Button>
 		</div>
 
-		<a id="kakao-login-btn"
-			 class="login-btn"
-			 style="display:none;"
-			 ng-show="!isLoggedIn"></a>
-		<Button id="kakao-logout-btn"
-						class="uk-button uk-button-secondary login-btn"
-						style="display:none;"
-						ng-show="isLoggedIn"
-						ng-click="logout();">
-			Logout
-		</Button>
-
-		<!--
-		<div>
-			<Button ng-click="friends();">
-				Friends
+		<div class="flex-box footer-box">
+			<a id="kakao-login-btn"
+				 class="login-btn"
+				 style="display:none;"
+				 ng-show="!isLoggedIn"></a>
+			<Button id="kakao-logout-btn"
+							class="uk-button uk-button-secondary login-btn"
+							style="display:none;"
+							ng-show="isLoggedIn"
+							ng-click="logout();">
+				로그아웃
 			</Button>
 		</div>
-		<div>
-			<Button ng-click="message();">
-				Send message
-			</Button>
-		</div>
-		-->
 
 		<script src="javascripts/app.js"></script>
   </body>
