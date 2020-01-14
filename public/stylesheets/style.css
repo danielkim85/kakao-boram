@@ -151,3 +151,8 @@ a {
 	margin-top:-40px;
 	position:relative;
 }
+
+.spinner-container{
+	text-align: center;
+	margin:20px;
+}

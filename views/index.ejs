@@ -27,7 +27,6 @@
 			<img class="profile-img"
 					 src="{{profile.thumbnailImage}}" />
 		</div>
-
 		<div ng-show="isLoggedIn && isSocketRdy"
 				 class="flex-box main-box uk-card uk-card-default uk-card-body uk-width-1-2@m msg-box">
 			<ul class="uk-comment-list">
@@ -69,6 +68,10 @@
 		</div>
 
 		<div class="flex-box footer-box">
+			<div class="spinner-container"
+					 ng-hide="isLoggedIn && isSocketRdy">
+				<span uk-spinner="ratio: 4.5"></span>
+			</div>
 			<a id="kakao-login-btn"
 				 class="login-btn"
 				 style="display:none;"

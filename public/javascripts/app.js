@@ -1,5 +1,5 @@
 angular.module("app", []).controller("BoramCtrl", function($scope) {
-
+  
   $scope.DEFAULT_PROFILE_IMG = 'https://www.downeastyachting.com/wp/wp-content/uploads/downeastyachting.com/2005/09/default-profile.png';
   $scope.title='보람톡!';
 
