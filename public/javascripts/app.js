@@ -32,7 +32,7 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
       getStatusInfo();
     },
     fail: function(err) {
-      console.error(err);
+      alert(err);
     }
   });
 
@@ -44,6 +44,7 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
   };
 
   const getStatusInfo = function (){
+    $scope.isLoading = true;
     Kakao.Auth.getStatusInfo(function(statusObj){
       $scope.isLoggedIn = statusObj.status === 'connected';
       if($scope.isLoggedIn){
@@ -53,6 +54,9 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
         }
         join();
         $scope.$apply();
+      }
+      else{
+        $scope.isLoading = false;
       }
       $('.login-btn').show();
     });
@@ -110,6 +114,7 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
   });
 
   socket.on('socketRdy',function(messages){
+    $scope.isLoading = false;
     $scope.chats = messages;
     $scope.isSocketRdy = true;
     $scope.$apply();
