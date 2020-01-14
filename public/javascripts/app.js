@@ -105,6 +105,10 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
     window.location.reload();
   });
 
+  socket.on('logout',function(){
+    $scope.logout();
+  });
+
   socket.on('socketRdy',function(messages){
     $scope.chats = messages;
     $scope.isSocketRdy = true;

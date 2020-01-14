@@ -59,6 +59,11 @@ a {
 	width:100%;
 	display:inline-block;
 }
+
+.msg-box .me:last-child{
+	margin-bottom:10px
+}
+
 .msg-box .uk-comment-avatar{
 	width:35px;
 	position:relative;
