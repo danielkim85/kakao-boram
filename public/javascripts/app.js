@@ -3,7 +3,11 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
   $scope.DEFAULT_PROFILE_IMG = 'https://www.downeastyachting.com/wp/wp-content/uploads/downeastyachting.com/2005/09/default-profile.png';
   $scope.title='보람톡!';
 
-  const socket = io.connect('http://localhost:3003', {
+  const host =  window.location.hostname;
+  const port =  '3003';
+  const protocol = 'http://';
+
+  const socket = io.connect(protocol + host + ':' + port, {
     'reconnection': true,
     'reconnectionDelay': 500,
     'reconnectionAttempts': 10
