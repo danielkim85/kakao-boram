@@ -3,7 +3,12 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
   $scope.DEFAULT_PROFILE_IMG = 'https://www.downeastyachting.com/wp/wp-content/uploads/downeastyachting.com/2005/09/default-profile.png';
   $scope.title='보람톡!';
 
-  const socket = io();
+  const socket = io.connect('http://localhost:3003', {
+    'reconnection': true,
+    'reconnectionDelay': 500,
+    'reconnectionAttempts': 10
+  });
+
   let unreadCount = 0;
 
   Kakao.init('72ec3baa9e089759a3d2618025dfc1f8');
@@ -27,19 +32,22 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
     }
   });
 
+  const join = function(){
+    socket.emit('join',{
+      accessToken : $scope.profile.accessToken,
+      userId : $scope.profile.userId
+    });
+  };
+
   const getStatusInfo = function (){
     Kakao.Auth.getStatusInfo(function(statusObj){
       $scope.isLoggedIn = statusObj.status === 'connected';
       if($scope.isLoggedIn){
-        //loadTestData();
         loadProfile(statusObj.user);
         if(!$scope.profile.accessToken){
           $scope.profile.accessToken = Kakao.Auth.getAccessToken();
         }
-        socket.emit('join',{
-          accessToken : $scope.profile.accessToken,
-          userId : $scope.profile.userId
-        });
+        join();
         $scope.$apply();
       }
       $('.login-btn').show();
@@ -82,6 +90,12 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
     $scope.msg = '';
     resetUnreadCounter();
   };
+
+  socket.on('connect', function(){
+    if($scope.profile.accessToken){
+      join();
+    }
+  });
 
   socket.on('refresh',function(){
     window.location.reload();
