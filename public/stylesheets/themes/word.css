@@ -45,6 +45,14 @@ html.word{
 	background-color:#fff;
 }
 
+.word .msg-box article{
+	color:black;
+}
+
 .word .msg-box .me article{
 	color:blue;
+}
+
+.word .msg-box .timestamp{
+	color:gray;
 }
