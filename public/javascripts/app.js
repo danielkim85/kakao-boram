@@ -56,7 +56,6 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
         $scope.$apply();
       }
       $scope.isLoading = false;
-      $scope.$apply();
       $('.login-btn').show();
     });
   };
