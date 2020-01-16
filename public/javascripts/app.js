@@ -55,9 +55,8 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
         join();
         $scope.$apply();
       }
-      else{
-        $scope.isLoading = false;
-      }
+      $scope.isLoading = false;
+      $scope.$apply();
       $('.login-btn').show();
     });
   };
@@ -138,6 +137,14 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
 
   $('html').click(function(){
     resetUnreadCounter();
+  });
+
+  $('.theme-icons').click(function(){
+    const theme = $(this).attr('name');
+    $('html').attr('class','');
+    if(theme !== 'default'){
+      $('html').addClass(theme);
+    }
   });
 
 });

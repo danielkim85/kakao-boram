@@ -1,0 +1,50 @@
+html.word{
+	background-color:#fff;
+}
+
+.word body{
+	font:14px Arial;
+}
+
+.word h1{
+	font:16px Arial;
+	font-size:16px;
+	color:#000;
+}
+
+.word .header-box{
+	height:30px;
+}
+
+.word .msg-box header,
+.word .profile-img{
+	display:none;
+}
+
+.word .msg-box{
+	background-color:#fff;
+	margin:20px;
+	padding:0;
+	box-shadow:none;
+}
+
+.word .uk-comment-body{
+	top:0;
+	margin-left:0;
+}
+
+.word .uk-comment-body p{
+	margin-left:0;
+}
+
+.word .msg-box .timestamp{
+	top:0;
+}
+
+.word .msg-box .me .uk-comment-body{
+	background-color:#fff;
+}
+
+.word .msg-box .me article{
+	color:blue;
+}
