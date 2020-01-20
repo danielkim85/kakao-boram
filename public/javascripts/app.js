@@ -1,5 +1,5 @@
-angular.module("app", ['ngSanitize']).controller("BoramCtrl", function($scope,$timeout) {
-  
+angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", function($scope,$timeout,$cookieStore) {
+
   $scope.DEFAULT_PROFILE_IMG = 'https://www.downeastyachting.com/wp/wp-content/uploads/downeastyachting.com/2005/09/default-profile.png';
   $scope.title='보람톡!';
 
@@ -169,10 +169,15 @@ angular.module("app", ['ngSanitize']).controller("BoramCtrl", function($scope,$t
 
   $('.theme-icons').click(function(){
     const theme = $(this).attr('name');
+    $cookieStore.put('theme',theme);
     $('html').attr('class','');
     if(theme !== 'default'){
       $('html').addClass(theme);
     }
   });
 
+  const curTheme = $cookieStore.get('theme');
+  if(curTheme){
+    $('html').addClass(curTheme);
+  }
 });
