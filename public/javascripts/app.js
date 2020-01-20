@@ -161,6 +161,13 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
     }
     $scope.$apply();
     scroll();
+
+    //send push notification
+    socket.emit('push',$scope.subscription,{
+      title:$scope.profile.nickname,
+      msg:data.message,
+      icon:data.thumbnailImage
+    });
   });
 
   $('html').click(function(){
@@ -181,4 +188,35 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
     $('html').addClass(curTheme);
   }
 
+  //web push
+  const publicVapidKey = 'BFs9AKOyH5DXrCKdmIfFdpu1xabkUT35gnGwjRigG7OxyCp9iivmxoW0AUteRVQd_SCap-AWdtn4fiYQ7n5jM9E';
+
+  const urlBase64ToUint8Array = function(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  };
+
+  if ('serviceWorker' in navigator) {
+    run().catch(error => console.error(error));
+  }
+
+  async function run() {
+    const registration = await navigator.serviceWorker.
+    register('/javascripts/worker.js?v=2.0', {scope: '/javascripts/'});
+    $scope.subscription = await registration.pushManager.
+    subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
+    });
+  }
 });
