@@ -180,4 +180,5 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
   if(curTheme){
     $('html').addClass(curTheme);
   }
+
 });
