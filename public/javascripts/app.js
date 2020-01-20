@@ -1,10 +1,10 @@
 angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", function($scope,$timeout,$cookieStore) {
 
-  $scope.DEFAULT_PROFILE_IMG = 'https://www.downeastyachting.com/wp/wp-content/uploads/downeastyachting.com/2005/09/default-profile.png';
+  $scope.DEFAULT_PROFILE_IMG = 'http://www.downeastyachting.com/wp/wp-content/uploads/downeastyachting.com/2005/09/default-profile.png';
   $scope.title='보람톡!';
 
   const host =  window.location.hostname;
-  const port =  host === 'localhost' ? '3000' : '443';
+  const port =  host === 'localhost' ? '3003' : '443';
   const protocol = host === 'localhost' ? 'http://' : 'https://';
 
   const socket = io.connect(protocol + host + ':' + port, {
@@ -149,6 +149,7 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
 
 
   socket.on('msg',function(data){
+
     if(!data.thumbnailImage){
       data.thumbnailImage = $scope.DEFAULT_PROFILE_IMG;
     }
@@ -163,6 +164,9 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
     scroll();
 
     //send push notification
+    if(data.thumbnailImage && data.thumbnailImage.substring(0,5) === 'http:'){
+      data.thumbnailImage = data.thumbnailImage.substring(5);
+    }
     socket.emit('push',$scope.subscription,{
       title:$scope.profile.nickname,
       msg:data.message,
