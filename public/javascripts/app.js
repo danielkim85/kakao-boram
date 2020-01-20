@@ -4,8 +4,8 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
   $scope.title='보람톡!';
 
   const host =  window.location.hostname;
-  const port =  '3003';
-  const protocol = 'http://';
+  const port =  host === 'localhost' ? '3000' : '443';
+  const protocol = host === 'localhost' ? 'http://' : 'https://';
 
   const socket = io.connect(protocol + host + ':' + port, {
     'reconnection': true,
