@@ -1,5 +1,6 @@
-angular.module("app", []).controller("BoramCtrl", function($scope) {
+angular.module("app", ['ngSanitize']).controller("BoramCtrl", function($scope,$timeout) {
 
+  $scope.trustAsHtml = $sce.trustAsHtml;
   $scope.DEFAULT_PROFILE_IMG = 'https://www.downeastyachting.com/wp/wp-content/uploads/downeastyachting.com/2005/09/default-profile.png';
   $scope.title='보람톡!';
 
@@ -45,19 +46,26 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
 
   const getStatusInfo = function (){
     $scope.isLoading = true;
-    Kakao.Auth.getStatusInfo(function(statusObj){
-      $scope.isLoggedIn = statusObj.status === 'connected';
-      if($scope.isLoggedIn){
-        loadProfile(statusObj.user);
-        if(!$scope.profile.accessToken){
-          $scope.profile.accessToken = Kakao.Auth.getAccessToken();
+    try {
+      Kakao.Auth.getStatusInfo(function (statusObj) {
+        $scope.isLoggedIn = statusObj.status === 'connected';
+        if ($scope.isLoggedIn) {
+          loadProfile(statusObj.user);
+          if (!$scope.profile.accessToken) {
+            $scope.profile.accessToken = Kakao.Auth.getAccessToken();
+          }
+          join();
+          $scope.$apply();
         }
-        join();
-        $scope.$apply();
-      }
-      $scope.isLoading = false;
-      $('.login-btn').show();
-    });
+        $scope.isLoading = false;
+        $timeout(function(){
+          $scope.$apply();
+        });
+        $('.login-btn').show();
+      });
+    } catch(err){
+      console.error(err);
+    }
   };
 
   const loadProfile = function(user){
@@ -76,6 +84,24 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
       $scope.title = '보람톡!';
     }
   };
+
+  //emoticon stuff
+  const regExp = /\(([^)]+)\)/g;
+  const emoticonsMap = {
+    "(쪽)" : 'kiss'
+  };
+  const transformEmoticons = function(msg){
+    const matches = msg.match(regExp);
+    for(const i in matches){
+      const match = matches[i];
+      if(emoticonsMap[match]){
+        const replace = '<img class="emoticons" src="images/emoticons/' + emoticonsMap[match] + '.png" \>';
+        msg = msg.split(match).join(replace);
+      };
+    }
+    return msg;
+  };
+
   getStatusInfo();
 
   $scope.logout = function(){
@@ -111,19 +137,23 @@ angular.module("app", []).controller("BoramCtrl", function($scope) {
     $scope.logout();
   });
 
-  socket.on('socketRdy',function(messages){
+  socket.on('socketRdy',function(chats){
     $scope.isLoading = false;
-    $scope.chats = messages;
+    for(const i in chats){
+      chats[i].message = transformEmoticons(chats[i].message);
+    }
+    $scope.chats = chats;
     $scope.isSocketRdy = true;
     $scope.$apply();
     scroll();
   });
 
+
   socket.on('msg',function(data){
     if(!data.thumbnailImage){
       data.thumbnailImage = $scope.DEFAULT_PROFILE_IMG;
     }
-
+    data.message = transformEmoticons(data.message);
     data.timestamp = moment(data.timestamp).format('h:mm a');
     $scope.chats.push(data);
     if($scope.profile.userId !== data.userId) {
