@@ -1,6 +1,5 @@
 angular.module("app", ['ngSanitize']).controller("BoramCtrl", function($scope,$timeout) {
-
-  $scope.trustAsHtml = $sce.trustAsHtml;
+  
   $scope.DEFAULT_PROFILE_IMG = 'https://www.downeastyachting.com/wp/wp-content/uploads/downeastyachting.com/2005/09/default-profile.png';
   $scope.title='보람톡!';
 
