@@ -31,7 +31,7 @@
 					 src="{{profile.thumbnailImage}}" />
 		</div>
 		<div ng-show="isLoggedIn && isSocketRdy"
-				 class="flex-box main-box uk-card uk-card-default uk-card-body uk-width-1-2@m msg-box">
+				 class="flex-box main-box uk-card uk-card-default uk-card-body uk-width-1-2@m msg-box large">
 			<ul class="uk-comment-list">
 				<li ng-repeat="chat in chats"
 						ng-class="profile.userId === chat.userId ? 'me' : 'not-me'">
@@ -96,6 +96,19 @@
 					<img class="theme-icons"
 							 name="word"
 							 src="images/word-icon.png" />
+				</div>
+			</div>
+			<div class="footer-action theme-container" ng-show="isLoggedIn && isSocketRdy">
+				<span class="uk-label uk-label-success">글꼴</span>
+				<div class="theme-icons-container">
+					<span class="font-size font-size-large"
+								font-size="large">
+							가
+					</span>
+					<span class="font-size font-size-small"
+								font-size="small">
+							가
+					</span>
 				</div>
 			</div>
 		</div>

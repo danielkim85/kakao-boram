@@ -186,3 +186,26 @@ a {
 	height: 14px;
 	margin-top: -3px;
 }
+
+.font-size{
+	display:inline-block;
+	margin-left:5px;
+	cursor: pointer;
+}
+
+.font-size-large{
+	font-size:20px;
+	margin-top:9px;
+	margin-left:2px;
+}
+
+.font-size-small{
+	font-size:14px;
+	margin-top:6px;
+	position: relative;
+	top:-2px;
+}
+
+.msg-box.small .uk-comment-body p{
+	font-size:10px;
+}

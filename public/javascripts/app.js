@@ -14,6 +14,7 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
   });
 
   let unreadCount = 0;
+  let config = {};
 
   Kakao.init('72ec3baa9e089759a3d2618025dfc1f8');
 
@@ -78,9 +79,17 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
   };
 
   const resetUnreadCounter = function(){
+    $scope.registration.getNotifications().then(function(notifications){
+      notifications.forEach(function(notification){
+        notification.close()
+      });
+    });
     if(unreadCount > 0) {
       unreadCount = 0;
       $scope.title = '보람톡!';
+      $timeout(function(){
+        $scope.$apply();
+      });
     }
   };
 
@@ -164,6 +173,9 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
     scroll();
 
     //send push notification
+    if(data.userId === $scope.profile.userId){
+      return;
+    }
     if(data.thumbnailImage && data.thumbnailImage.substring(0,5) === 'http:'){
       data.thumbnailImage = data.thumbnailImage.substring(5);
     }
@@ -180,16 +192,34 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
 
   $('.theme-icons').click(function(){
     const theme = $(this).attr('name');
-    $cookieStore.put('theme',theme);
+    config.theme = theme;
+    $cookieStore.put('config',config);
     $('html').attr('class','');
     if(theme !== 'default'){
       $('html').addClass(theme);
     }
   });
 
-  const curTheme = $cookieStore.get('theme');
-  if(curTheme){
-    $('html').addClass(curTheme);
+  $('.font-size').click(function(){
+    const fontSize = $(this).attr('font-size');
+    if(fontSize === 'large'){
+      $('.msg-box').removeClass('small');
+    }
+    else{
+      $('.msg-box').removeClass('large');
+    }
+    $('.msg-box').addClass(fontSize);
+    config.fontSize = fontSize;
+    $cookieStore.put('config',config);
+  });
+
+  config = $cookieStore.get('config') ? $cookieStore.get('config') : {};
+  if(config.theme){
+    $('html').addClass(config.theme);
+  }
+  if(config.fontSize === 'small'){
+    $('.msg-box').removeClass('large');
+    $('.msg-box').addClass(config.fontSize);
   }
 
   //web push
@@ -215,9 +245,9 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
   }
 
   async function run() {
-    const registration = await navigator.serviceWorker.
-    register('/javascripts/worker.js?v=2.0', {scope: '/javascripts/'});
-    $scope.subscription = await registration.pushManager.
+    $scope.registration = await navigator.serviceWorker.
+    register('/javascripts/worker.js?v=1.0.0', {scope: '/javascripts/'});
+    $scope.subscription = await $scope.registration.pushManager.
     subscribe({
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
