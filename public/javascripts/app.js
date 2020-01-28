@@ -137,6 +137,10 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
     }
   });
 
+  socket.on('errorMsg',function(err){
+    alert(err);
+  });
+
   socket.on('refresh',function(){
     window.location.reload();
   });
