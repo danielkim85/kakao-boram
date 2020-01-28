@@ -79,15 +79,9 @@
 				 class="login-btn"
 				 style="display:none;"
 				 ng-show="!isLoggedIn"></a>
-			<Button id="kakao-logout-btn"
-							class="uk-button uk-button-secondary login-btn footer-action"
-							style="display:none;"
-							ng-show="isLoggedIn"
-							ng-click="logout();">
-				로그아웃
-			</Button>
-
-			<div class="footer-action theme-container" ng-show="isLoggedIn && isSocketRdy">
+			<div class="footer-action theme-container"
+					 style="margin-left:5px;"
+					 ng-show="isLoggedIn && isSocketRdy">
 				<span class="uk-label">테마</span>
 				<div class="theme-icons-container">
 					<img class="theme-icons"
@@ -114,6 +108,11 @@
 					</span>
 				</div>
 			</div>
+			<span class="footer-action login-btn"
+						style="display:none;float:right;"
+						ng-show="isLoggedIn"
+						ng-click="logout();"
+						uk-icon="icon: sign-out; ratio: 2"></span>
 		</div>
 
 		<script src="javascripts/app.js"></script>
