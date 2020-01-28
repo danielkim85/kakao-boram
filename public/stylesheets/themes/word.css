@@ -2,16 +2,23 @@ html.word{
 	background-color:#fff;
 }
 
+html.word.dark{
+	background-color:#000;
+}
+
 .word body{
 	font:14px Arial;
 }
 
 .word h1{
 	font:16px Arial;
-	font-size:16px;
 	color:#000;
+	margin:10px 0;
 }
 
+.word.dark h1 {
+	color:limegreen;
+}
 .word .header-box{
 	height:30px;
 }
@@ -28,9 +35,18 @@ html.word{
 	box-shadow:none;
 }
 
+.word.dark .msg-box {
+	background-color:#000;
+}
+
 .word .uk-comment-body{
 	top:0;
 	margin-left:0;
+}
+
+.word.dark .uk-comment-body {
+	background-color:#000;
+	color:#fff;
 }
 
 .word .uk-comment-body p{
@@ -45,6 +61,11 @@ html.word{
 	background-color:#fff;
 }
 
+.word.dark .msg-box .me .uk-comment-body{
+	background-color:#000;
+	color:limegreen;
+}
+
 .word .msg-box article{
 	color:black;
 }
@@ -55,4 +76,9 @@ html.word{
 
 .word .msg-box .timestamp{
 	color:gray;
+}
+
+.word.dark .msg-input{
+	background-color:#333333;
+	color:#fff;
 }
