@@ -209,3 +209,7 @@ a {
 .msg-box.small .uk-comment-body p{
 	font-size:10px;
 }
+
+.login-btn{
+	padding:0 15px;
+}
