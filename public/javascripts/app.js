@@ -9,6 +9,23 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
 
   const LOCAL_STORAGE_NAME = 'boram.config';
 
+  //function to detect mobile
+  const isMobile = function(){
+    if( navigator.userAgent.match(/Android/i)
+      || navigator.userAgent.match(/webOS/i)
+      || navigator.userAgent.match(/iPhone/i)
+      || navigator.userAgent.match(/iPad/i)
+      || navigator.userAgent.match(/iPod/i)
+      || navigator.userAgent.match(/BlackBerry/i)
+      || navigator.userAgent.match(/Windows Phone/i)
+    ){
+      return true;
+    }
+    else {
+      return false;
+    }
+  };
+
   const socket = io.connect(protocol + host + ':' + port, {
     'reconnection': true,
     'reconnectionDelay': 500,
@@ -42,7 +59,8 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
   const join = function(){
     socket.emit('join',{
       accessToken : $scope.profile.accessToken,
-      userId : $scope.profile.userId
+      userId : $scope.profile.userId,
+      isMobile : isMobile()
     });
   };
 
@@ -115,11 +133,6 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
   getStatusInfo();
 
   socket.on('debug',function(debug){
-    let msg = '';
-    for(const k in debug){
-      msg += k + ',' + debug[k];
-    }
-    alert(msg);
     console.info(debug);
   });
 
