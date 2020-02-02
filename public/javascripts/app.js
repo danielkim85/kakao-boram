@@ -186,6 +186,7 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
         }
       },
       success: function(res) {
+        console.info(res);
         //do nothing
       }
     });
