@@ -28,7 +28,7 @@
 		<div class="flex-box header-box">
 			<h1>보람톡!</h1>
 			<img class="profile-img"
-					 src="{{profile.thumbnailImage}}" />
+					 ng-src="{{profile.thumbnailImage}}" />
 		</div>
 		<div ng-show="isLoggedIn && isSocketRdy"
 				 class="flex-box main-box uk-card uk-card-default uk-card-body uk-width-1-2@m msg-box large">
@@ -40,7 +40,7 @@
 							<div class="uk-grid-medium uk-flex-middle" uk-grid>
 								<div class="uk-width-auto">
 									<img class="uk-comment-avatar"
-											 src="{{chat.thumbnailImage ? chat.thumbnailImage : DEFAULT_PROFILE_IMG}}"
+											 ng-src="{{chat.thumbnailImage ? chat.thumbnailImage : DEFAULT_PROFILE_IMG}}"
 											 width="80" height="80" alt="">
 								</div>
 								<div class="uk-width-expand">
@@ -111,7 +111,7 @@
 			<span class="footer-action login-btn"
 						style="display:none;float:right;"
 						ng-show="isLoggedIn"
-						ng-click="logout();"
+						ng-click="unlink();"
 						uk-icon="icon: sign-out; ratio: 2"></span>
 		</div>
 

@@ -116,6 +116,16 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
     Kakao.Auth.logout(function(){
       $scope.isLoggedIn = false;
       $scope.$apply();
+      socket.emit('logout',$scope.profile.userId);
+    });
+  };
+
+  $scope.unlink = function(){
+    Kakao.API.request({
+      url: '/v1/user/unlink',
+      success: function(res) {
+        $scope.logout();
+      }
     });
   };
 
@@ -160,6 +170,26 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
     scroll();
   });
 
+  socket.on('kakaoNotify',function(data){
+    console.info(data);
+    //tried doing this in server side, but didn't work. letting client handle it.
+    Kakao.API.request({
+      url: '/v1/api/talk/friends/message/default/send',
+      data: {
+        receiver_uuids: data.uuid,
+        template_object: {
+          "object_type":"text",
+          "text":data.msg,
+          "link":{
+            "web_url":"https://boram.sooda.io"
+          }
+        }
+      },
+      success: function(res) {
+        //do nothing
+      }
+    });
+  });
 
   socket.on('msg',function(data){
 
@@ -202,6 +232,7 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
     if(theme !== 'default'){
       $('html').addClass(theme);
     }
+    scroll();
   });
 
   $('.font-size').click(function(){
