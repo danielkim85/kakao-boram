@@ -137,7 +137,6 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
   });
 
   $scope.debug = function(){
-    alert(isMobile());
     console.info('debug called');
     socket.emit('debug');
   };
