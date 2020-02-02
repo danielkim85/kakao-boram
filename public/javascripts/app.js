@@ -114,6 +114,20 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
 
   getStatusInfo();
 
+  socket.on('debug',function(debug){
+    let msg = '';
+    for(const k in debug){
+      msg += k + ',' + debug[k];
+    }
+    alert(msg);
+    console.info(debug);
+  });
+
+  $scope.debug = function(){
+    console.info('debug called');
+    socket.emit('debug');
+  };
+
   $scope.logout = function(){
     Kakao.Auth.logout(function(){
       $scope.isLoggedIn = false;
