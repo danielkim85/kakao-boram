@@ -1,4 +1,4 @@
-angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", function($scope,$timeout,$cookieStore) {
+angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", function($scope,$timeout) {
 
   $scope.DEFAULT_PROFILE_IMG = 'http://www.downeastyachting.com/wp/wp-content/uploads/downeastyachting.com/2005/09/default-profile.png';
   $scope.title='보람톡!';
@@ -6,6 +6,8 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
   const host =  window.location.hostname;
   const port =  host === 'localhost' ? '3003' : '443';
   const protocol = host === 'localhost' ? 'http://' : 'https://';
+
+  const LOCAL_STORAGE_NAME = 'boram.config';
 
   const socket = io.connect(protocol + host + ':' + port, {
     'reconnection': true,
@@ -228,7 +230,8 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
   $('.theme-icons').click(function(){
     const theme = $(this).attr('name');
     config.theme = theme;
-    $cookieStore.put('config',config);
+    localStorage.setItem(LOCAL_STORAGE_NAME,JSON.stringify(config));
+
     $('html').attr('class','');
     if(theme !== 'default'){
       $('html').addClass(theme);
@@ -246,10 +249,14 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
     }
     $('.msg-box').addClass(fontSize);
     config.fontSize = fontSize;
-    $cookieStore.put('config',config);
+    localStorage.setItem(LOCAL_STORAGE_NAME,JSON.stringify(config));
   });
 
-  config = $cookieStore.get('config') ? $cookieStore.get('config') : {};
+  config = JSON.parse(localStorage.getItem('boram.config'));
+  if(!config){
+    config = {};
+  }
+
   if(config.theme){
     $('html').addClass(config.theme);
   }
