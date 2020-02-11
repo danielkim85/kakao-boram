@@ -26,12 +26,7 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
     }
   };
 
-  const socket = io.connect(protocol + host + ':' + port, {
-    'reconnection': true,
-    'reconnectionDelay': 500,
-    'reconnectionAttempts': 10
-  });
-
+  let socket;
   let unreadCount = 0;
   let config = {};
 
@@ -74,7 +69,18 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
           if (!$scope.profile.accessToken) {
             $scope.profile.accessToken = Kakao.Auth.getAccessToken();
           }
-          join();
+          //login successful
+          if(!socket) {
+            socket = io.connect(protocol + host + ':' + port, {
+              'reconnection': true,
+              'reconnectionDelay': 500,
+              'reconnectionAttempts': 10
+            });
+            registerSocketEvent();
+          }
+          else {
+            join();
+          }
           $scope.$apply();
         }
         $scope.isLoading = false;
@@ -99,11 +105,6 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
   };
 
   const resetUnreadCounter = function(){
-    $scope.registration.getNotifications().then(function(notifications){
-      notifications.forEach(function(notification){
-        notification.close()
-      });
-    });
     if(unreadCount > 0) {
       unreadCount = 0;
       $scope.title = '보람톡!';
@@ -111,6 +112,14 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
         $scope.$apply();
       });
     }
+    if(!$scope.registration.getNotifications){
+      return;
+    }
+    $scope.registration.getNotifications().then(function(notifications){
+      notifications.forEach(function(notification){
+        notification.close()
+      });
+    });
   };
 
   //emoticon stuff
@@ -132,10 +141,6 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
 
   getStatusInfo();
 
-  socket.on('debug',function(debug){
-    console.info(debug);
-  });
-
   $scope.debug = function(){
     console.info('debug called');
     socket.emit('debug');
@@ -146,6 +151,7 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
       $scope.isLoggedIn = false;
       $scope.$apply();
       socket.emit('logout',$scope.profile.userId);
+      window.location.reload();
     });
   };
 
@@ -170,85 +176,89 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
     resetUnreadCounter();
   };
 
-  socket.on('connect', function(){
-    if($scope.profile.accessToken){
-      join();
-    }
-  });
+  const registerSocketEvent = function(){
+    socket.on('debug',function(debug){
+      console.info(debug);
+    });
 
-  socket.on('errorMsg',function(err){
-    alert(err);
-  });
-
-  socket.on('refresh',function(){
-    window.location.reload();
-  });
-
-  socket.on('logout',function(){
-    $scope.logout();
-  });
-
-  socket.on('socketRdy',function(chats){
-    $scope.isLoading = false;
-    for(const i in chats){
-      chats[i].message = transformEmoticons(chats[i].message);
-    }
-    $scope.chats = chats;
-    $scope.isSocketRdy = true;
-    $scope.$apply();
-    scroll();
-  });
-
-  socket.on('kakaoNotify',function(data){
-    console.info(data);
-    //tried doing this in server side, but didn't work. letting client handle it.
-    Kakao.API.request({
-      url: '/v1/api/talk/friends/message/default/send',
-      data: {
-        receiver_uuids: data.uuid,
-        template_object: {
-          "object_type":"text",
-          "text":data.msg,
-          "link":{
-            "web_url":"https://boram.sooda.io"
-          }
-        }
-      },
-      success: function(res) {
-        console.info(res);
-        //do nothing
+    socket.on('connect', function(){
+      if($scope.profile.accessToken){
+        join();
       }
     });
-  });
 
-  socket.on('msg',function(data){
-
-    if(!data.thumbnailImage){
-      data.thumbnailImage = $scope.DEFAULT_PROFILE_IMG;
-    }
-    data.message = transformEmoticons(data.message);
-    data.timestamp = moment(data.timestamp).format('h:mm a');
-    $scope.chats.push(data);
-    if($scope.profile.userId !== data.userId) {
-      unreadCount++;
-      $scope.title = '(' + unreadCount + ')보람톡!';
-    }
-    $scope.$apply();
-    scroll();
-
-    //send push notification
-    if(data.userId === $scope.profile.userId){
-      return;
-    }
-    if(data.thumbnailImage && data.thumbnailImage.substring(0,5) === 'http:'){
-      data.thumbnailImage = data.thumbnailImage.substring(5);
-    }
-    socket.emit('push',$scope.subscription,{
-      title:$scope.profile.nickname,
-      msg:data.message,
-      icon:data.thumbnailImage
+    socket.on('errorMsg',function(err){
+      alert(err);
     });
-  });
+
+    socket.on('refresh',function(){
+      window.location.reload();
+    });
+
+    socket.on('logout',function(){
+      $scope.logout();
+    });
+
+    socket.on('socketRdy',function(chats){
+      $scope.isLoading = false;
+      for(const i in chats){
+        chats[i].message = transformEmoticons(chats[i].message);
+      }
+      $scope.chats = chats;
+      $scope.isSocketRdy = true;
+      $scope.$apply();
+      scroll();
+    });
+
+    socket.on('kakaoNotify',function(data){
+      //tried doing this in server side, but didn't work. letting client handle it.
+      Kakao.API.request({
+        url: '/v1/api/talk/friends/message/default/send',
+        data: {
+          receiver_uuids: data.uuid,
+          template_object: {
+            "object_type":"text",
+            "text":data.msg,
+            "link":{
+              "web_url":"https://boram.sooda.io"
+            }
+          }
+        },
+        success: function(res) {
+          //do nothing
+        }
+      });
+    });
+
+    socket.on('msg',function(data){
+
+      if(!data.thumbnailImage){
+        data.thumbnailImage = $scope.DEFAULT_PROFILE_IMG;
+      }
+      data.message = transformEmoticons(data.message);
+      data.timestamp = moment(data.timestamp).format('h:mm a');
+      $scope.chats.push(data);
+      if($scope.profile.userId !== data.userId) {
+        unreadCount++;
+        $scope.title = '(' + unreadCount + ')보람톡!';
+      }
+      $scope.$apply();
+      scroll();
+
+      //send push notification
+      if(data.userId === $scope.profile.userId){
+        return;
+      }
+      if(data.thumbnailImage && data.thumbnailImage.substring(0,5) === 'http:'){
+        data.thumbnailImage = data.thumbnailImage.substring(5);
+      }
+      socket.emit('push',$scope.subscription,{
+        title:$scope.profile.nickname,
+        msg:data.message,
+        icon:data.thumbnailImage
+      });
+    });
+  };
 
   $('html').click(function(){
     resetUnreadCounter();
@@ -316,7 +326,11 @@ angular.module("app", ['ngSanitize','ngCookies']).controller("BoramCtrl", functi
 
   async function run() {
     $scope.registration = await navigator.serviceWorker.
-    register('/javascripts/worker.js?v=1.0.0', {scope: '/javascripts/'});
+    register('/javascripts/worker.js?v=1.0.1', {scope: '/javascripts/'});
+    if(!$scope.registration.pushManager){
+      console.warn('safari does not support web push.');
+      return;
+    }
     $scope.subscription = await $scope.registration.pushManager.
     subscribe({
       userVisibleOnly: true,

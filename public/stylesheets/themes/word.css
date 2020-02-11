@@ -82,3 +82,8 @@ html.word.dark{
 	background-color:#333333;
 	color:#fff;
 }
+
+.word .login-btn{
+	top:15px;
+	position:relative
+}
